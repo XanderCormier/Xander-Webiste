@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Website - Alexander C.</title>
+    <meta name="description" content="A website by and about Alexander C.">
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <header class="small-header">
+        <nav class="nav main-nav">
+            <ul>
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="groups.html">MY GROUPS</a></li>
+                <li><a href="PROJECTS.html">PROJECTS</a></li>
+            </ul>
+        </nav>
+    <h1 class="title">PROJECTS</h1>
+    </header>
+
+    <label id="VelLabel" for "Vel">Enter Velocity Magnitude:</label>
+    <input type="number" id="Vel" value="15">
+
+    <label id="AngLabel" for "Angle">Enter Angle In Degrees (1-89):</label>
+    <input type="number" id="Angle" value="60" min = "1" max="89">
+
+    <button id="myBtn" onclick="PlayBall()">Start Simulation.</button>
+
+    <canvas id="myCanvas" style="border:2px solid"></canvas>
+
+    
+    <script>
+        
+        function PlayBall() {
+
+            // canvas setup
+
+
+            var canvas = document.getElementById("myCanvas");
+            var c = canvas.getContext("2d");
+
+            canvas.width = window.innerWidth - 20;
+            canvas.height = window.innerHeight - 100;
+
+            var simMinWidth = 20.0;
+            var cScale = Math.min(canvas.width, canvas.height) / simMinWidth;
+            var simWidth = canvas.width / cScale;
+            var simHeight = canvas.height / cScale;
+
+            function cX(pos) {
+                return pos.x * cScale;
+            }
+    
+            function cY(pos) {
+            return canvas.height - pos.y * cScale;
+            }
+
+
+            var gravity = { x: 0.0, y: -10.0};
+
+            // basically we make the time increase in small amounts to reduce % of error.
+            var timeStep = 0.5 / 60.0;
+            
+            var Angle = document.getElementById("Angle").value * Math.PI/180;
+            var Xvel = document.getElementById("Vel").value * Math.cos(Angle);
+            var Yvel = document.getElementById("Vel").value * Math.sin(Angle);
+
+            var ball = {
+                radius : 0.2,
+                pos : {x : 0.2, y : 0.2},
+                // initial velocity v
+                vel : {x : Xvel, y : Yvel}
+            };
+
+            // drawing
+
+            function draw() {
+                c.clearRect(0, 0, canvas.width, canvas.height);
+
+                c.fillStyle = "#FF0000";
+
+                c.beginPath();
+                c.arc(
+                    cX(ball.pos), cY(ball.pos), cScale * ball.radius, 0.0, 2.0 * Math.PI);
+                c.closePath();
+                c.fill();
+            }
+
+            // simulate
+
+            function simulate() {
+                // this is the funny physics equations (vf = vi + gt) or (xf = xi + vt)
+                ball.vel.x += gravity.x * timeStep;
+                ball.vel.y += gravity.y * timeStep;
+                ball.pos.x += ball.vel.x * timeStep;
+                ball.pos.y += ball.vel.y * timeStep;
+
+                if (ball.pos.x < 0.0) {
+                    ball.pos.x = 0.0;
+                    ball.vel.x = -ball.vel.x;
+                }
+                if (ball.pos.x > simWidth) {
+                    ball.pos.x = simWidth;
+                    ball.vel.x = -ball.vel.x;
+                }
+                if (ball.pos.y < 0.0) {
+                    ball.pos.y = 0.0;
+                    ball.vel.y = -ball.vel.y;
+                }
+            }
+
+            function friction() {
+                if (ball.pos.y < 0.01 && ball.vel.x > 0) {
+                    ball.vel.x -= .005  // should be replaced with change in vel due to friction
+                }
+            }
+
+            // make browser call this
+
+            function update() {
+                simulate();
+                draw();
+                requestAnimationFrame(update);
+                friction();
+            }
+
+            update();
+
+        }
+    </script>
+
+
+
+
+
+    <footer class="main-footer">
+        <div class="container main-footer-container">
+        <h3 class="title">Alexander Cormier</h3>
+        <ul class="nav footer-nav">
+            <li>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=xandertcormier@gmail.com" target="_blank">
+                    <img src="Images/gmail.png" width="100" height="100">
+                </a>
+            </li>
+            <li>
+                <a href="https://www.youtube.com/channel/UCZCot6vITOuNk0yykGBsYRg" target="_blank">
+                    <img src="Images/youtube.png" width="100">
+                </a>
+            </li>
+        </ul>
+        </div>
+    </footer>
+</body>
+
+</html>
