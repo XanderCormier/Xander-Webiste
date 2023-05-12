@@ -84,12 +84,12 @@ html, body {
 }
 
 
-.lesson-button {
+.main-button {
     padding-top: 1em;
     text-align: center;
 }
 
-.lesson-button-font {
+.main-button-font {
     font-size: 3.5em;
     font-weight: bold;
     border-radius: 12px;
@@ -99,7 +99,7 @@ html, body {
     background-color: rgba(255, 255, 255, .1);
 }
 
-.lesson-button-font:hover {
+.main-button-font:hover {
     background-color: rgba(255, 255, 255, .3);
 }
 
